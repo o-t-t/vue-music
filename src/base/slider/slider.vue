@@ -93,7 +93,6 @@
             pageIndex -= 1
           }
           this.currentPageIndex = pageIndex
-          console.log(this.currentPageIndex)
           if (this.autoPlay) {
             clearTimeout(this.timer)
             this._play()

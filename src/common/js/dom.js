@@ -6,7 +6,6 @@ export function hasClass(el, className) {
 
 // 添加class类名
 export function addClass(el, className) {
-  console.log(hasClass(el, className))
   if (hasClass(el, className)) {
     return
   }
