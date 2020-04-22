@@ -1,9 +1,10 @@
 <template>
   <div class='singer'>
-    歌曲页面
+    <list-view :data='singers'></list-view>
   </div>
 </template>
 <script>
+import ListView from 'base/listview/listview'
 import {getSingerList} from 'api/singer'
 import {ERR_OK} from 'api/config'
 import Singer from 'common/js/singer'
@@ -14,6 +15,9 @@ export default {
     return {
       singers: []
     }
+  },
+  components: {
+    ListView
   },
   created() {
     this._getSingerList()
@@ -80,5 +84,9 @@ export default {
 }
 </script>
 <style lang="stylus">
-
+  .singer
+    position: fixed
+    top: 88px
+    bottom: 0
+    width: 100%
 </style>
