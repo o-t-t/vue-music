@@ -11,3 +11,6 @@ export const options = {
 }
 
 export const ERR_OK = 0
+
+const debug = process.env.NODE_ENV !== 'production'
+export const baseUrl = debug ? '' : '/music'

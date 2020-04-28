@@ -4,6 +4,7 @@ const webpack = require('webpack')
 const config = require('../config')
 const merge = require('webpack-merge')
 const path = require('path')
+const cheerio = require('cheerio')
 const baseWebpackConfig = require('./webpack.base.conf')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -39,6 +40,36 @@ const devWebpackConfig = merge(baseWebpackConfig, {
           res.json(response.data)
         }).catch((e) => {
           console.log(e)
+        })
+      })
+
+      app.get('/api/songsrc', function(req, res) {
+        const params = Object.assign({}, { 'ADTAG': 'newyqq.song' }, req.query)
+        axios.get('https://i.y.qq.com/v8/playsong.html', {
+          headers: {
+            'user-agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.26 Mobile Safari/537.36'
+          },
+          params: params
+        }).then((response) => {
+          var $ = cheerio.load(response.data);
+          var t = $('html').find('script');
+          var obj = null
+          t.each(function(i, elem) {
+            if (obj !== null) {
+              return false
+            }
+            var text = $(this).html();
+            text.trim().split('\n').forEach(function(v, i) {
+              if (v.match('songlist')) {
+                obj = v
+                return false
+              }
+            })
+          });
+          if (obj) {
+            var objText = obj.substring(obj.indexOf('[') + 1, (obj.length - 2))
+            res.json({ src: JSON.parse(objText).m4aUrl })
+          }
         })
       })
     },
